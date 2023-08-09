@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[45]:
-
-
 import os
 import re
 import cv2
