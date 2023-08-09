@@ -110,16 +110,14 @@ class PCBDefectMatcher:
         
 
 
-def main():
-    selected_defect_folders = ['Mouse_bite', 'Open_circuit']  # 원하는 결함 입력
-    good_folder = 'C:/work/python/PCB/PCB_DATASET/PCB_USED' # 경로 수정
-    output_folder = 'C:/work/python/PCB/PCB_DATASET' # 경로 수정
-    
-    for defect_folder in selected_defect_folders:
-        output_path = os.path.join(output_folder, f"diff_{defect_folder}.txt")
-        pcb_matcher = PCBDefectMatcher([defect_folder], good_folder, output_folder)
-        pcb_matcher.load_defect_images(defect_folder)
+#%% 실행
 
-if __name__ == "__main__":
-    main()
+selected_defect_folders = ['Mouse_bite', 'Open_circuit']  # 원하는 결함 입력
+good_folder = 'C:/work/python/PCB/PCB_DATASET/PCB_USED' # 경로 수정
+output_folder = 'C:/work/python/PCB/PCB_DATASET' # 경로 수정
+    
+for defect_folder in selected_defect_folders:
+    pcb_matcher = PCBDefectMatcher([defect_folder], good_folder, output_folder)
+    pcb_matcher.load_defect_images(defect_folder)
+
 
