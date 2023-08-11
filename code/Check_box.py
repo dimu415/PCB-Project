@@ -122,11 +122,8 @@ class Check:
         # 최종 이미지 출력
         return sample_image_annotated.show()
 
-Check('01_missing_hole_01', pred, cls)
-
-
-# In[ ]:
-
+Check(fname, pred, cls) 
+#fname 예시) 01_missing_hole_01
 
 
 
