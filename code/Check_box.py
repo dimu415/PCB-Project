@@ -9,13 +9,15 @@ import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 import xml.etree.ElementTree as ET
 
+#%% Annotation  결함 좌표와 학습 결과 좌표 시각화
 class Check:
     def __init__(self, fname, pred, cls):
         self.fname = fname
         self.pred = pred
         self.cls = cls
         self.ymodel_box()
-        
+
+    #%% Annotation 시각화
     def check_result(self):
         xml_path = os.path.join('C:/work/python/PCB/PCB_DATASET/Annotations/Missing_hole', self.fname + '.xml')
         image_path = os.path.join('C:/work/python/PCB/PCB_DATASET/images/Missing_hole', self.fname + '.jpg')
@@ -48,6 +50,7 @@ class Check:
 
         return font, img_bbox, sample_image_annotated
         
+    #%% 학습 결과 class 구분    
     def extract_defect_class(self):
         cls_list = []
         clsf = []
@@ -64,7 +67,8 @@ class Check:
             dc = d_class[j]
             clsf.append(dc)
         return clsf
-    
+        
+    #%% 학습 결과 시각화
     def ymodel_box(self):
         font, img_bbox, sample_image_annotated = self.check_result()
 
