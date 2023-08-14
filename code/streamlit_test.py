@@ -1,58 +1,63 @@
 import streamlit as st
 import os
 from PIL import Image
-
+import pandas as pd
 class MyApp:
     def __init__(self):
-        categories=['a','b','c']
-        selected_category = st.sidebar.radio("", ["Upload", "Label", "Split", "Train", "Analyze"])
-        selected_categories = st.sidebar.multiselect("카테고리 선택", categories)
+        
+        
+        
             # 각 카테고리에 따라 내용 출력
-
-        for category in selected_categories:
-            st.write(f"- {category}")
-        if selected_category == "Upload":
-                self.Upload()
-        elif selected_category == "Label":
-                self.Label_work()
-        elif selected_category == "Split":
-                self.split()
-        elif selected_category == "Train":
-                self.train()
-        elif selected_category == "Analyze":
-                st.write("Analyze 카테고리 내용을 여기에 표시")
-#%% Upload        
+        self.logged=False
+        st.write(self.logged)
+        if self.logged==False:
+            self.login()
+            
+        else:
+            selected_category = st.sidebar.radio("", ["login","Upload", "Label", "Split", "Train", "Analyze"])
+            #selected_categories = st.sidebar.multiselect("카테고리 선택", categories)
+            #for category in selected_categories:
+                #st.write(f"- {category}")
+                
+            if selected_category == "login":
+                    self.login()    
+            elif selected_category == "Upload":
+                    self.Upload()
+            elif selected_category == "Label":
+                    self.Label_work()
+            elif selected_category == "Split":
+                    self.split()
+            elif selected_category == "Train":
+                    self.train()
+            elif selected_category == "Analyze":
+                    st.write("Analyze 카테고리 내용을 여기에 표시")
+        
+        self.path=""
+        
+#%% login
+    def login(self):
+        user_id = st.text_input("아이디", type='password')
+        user_pass = st.text_input("비밀번호", type='password')
+        if user_id == "user" and user_pass == "4321":
+            self.logged = True
+            st.write("aa")
+        else:
+            self.logged=False
+       
+        
+# %% Upload        
     def Upload(self):
         
-        if st.button("파일 선택"):
-            
-            file_path = self.file_dialog()
-            if file_path:
-                st.write(f"선택한 파일 경로: {file_path}")
-            else:
-                st.write("파일을 선택하지 않았습니다.")
-                
-        
-        
-        box_style = (
-     "border: 2px dotted gray; padding: 300px; background-color: transparent;"
- )
-
-        box_container = st.container()
-        
-        box_container.markdown(f'<div style="{box_style}">', unsafe_allow_html=True)
-        
-        
-           # 경계선 닫기
-        box_container.markdown("</div>", unsafe_allow_html=True)
-
-
+        file = st.file_uploader("파일을 선택하세요")
     
-        # 나중에 이미지 추가 # 이미지 파일의 경로
-       
-    def file_dialog(self):
-        file_path = st.file_uploader("파일 선택", type=["jpg", "jpeg", "png"], key="file_uploader")
-        return file_path
+    # 파일이 선택되었을 경우에만 파일 경로를 표시합니다.
+        if file is not None:
+            file_name = file.name
+            st.write("선택된 파일 경로:", file_name[:-4])
+            
+            self.path=os.path.abspath(file_name)
+            st.write(self.path)
+    
         
     
 
@@ -63,7 +68,6 @@ class MyApp:
         
         image_folder = "C:/Users/lg/Desktop/work/images"
         image_files = self.get_image_files(image_folder)
-       
         if not image_files:
             st.write("이미지 파일이 없습니다.")
         else:
@@ -124,56 +128,84 @@ class MyApp:
         image_files = [folder_path+"/"+ file for file in os.listdir(folder_path) if any(file.lower().endswith(ext) for ext in image_extensions)]
         return image_files
 
-#%%
+#%% split
     def split(self):
-        col1, empty,col2= st.columns([2,3,2])
+        col1, col2,col3,col4 =st.columns([1,1,2,1])
         box_style = (
      "border: 2px dotted gray; padding: 10px; background-color: transparent;"
  )
-        
+        self.slider_value=0
         with col1:
+            st.write("")
+            st.write("")
             st.write("file name")
-            self.slider_value = st.slider("슬라이더", min_value=0, max_value=100, value=50,
+        with col3:
+            self.slider_value = st.slider("", min_value=0, max_value=100, value=50,
                                           format="%s", key="custom_slider")
-            st.write(self.slider_value)
-        with col2:
-            
-
-            st.container()
-            
-            st.markdown(f'<div style="{box_style}">'
-                                f'<h3>train_val</h3>'
-                                f'<p style="margin-top: 0;">train:81% </p>'
-                                f'<p style="margin-top: 0;">val:19%</p>'
-                                f'</div>', unsafe_allow_html=True)
-                    
             
             
         with col2:
-            st.write("clss:80% , 20%")
-            st.write("clss:79% , 21%")
-            st.write("clss:82% , 18%")
-       
+            st.write("")
+            st.write("")
+            st.write(f"train:{self.slider_value}% val:{100-self.slider_value}")
             
-#%%
+            
+            
+        with col4:
+            st.write("")
+            st.write("")
+            split_button= st.button("yolo")
+            
+        if split_button:
+            st.success("휘리릭 뽕")
+            st.write("train:81%     val:81%")
+            
+            indexs=["test", "missing", "bite", "hole"]
+            val=[100, 80, 79, 88]
+            test= [0, 20, 31, 12]
+            
+            data = {
+                "val": val,
+                "test": test
+            }
+            
+            
+            df = pd.DataFrame(data,index=indexs)
+            st.dataframe(df,height=600,width=800)
+           
     def train(self):
         
         a="asd"
         
             # 첫 번째 박스 생성
-        with st.expander("첫 번째 박스"):
-            model=st.button("yolo")
-            if model:
-                a="yolo"
-            st.write(a)
+        with st.expander("모델 선택"):
+            model_selected = st.checkbox("yolo")
+            if model_selected:
+                st.success("Yolo 모델이 선택되었습니다.")
     
             # 두 번째 박스 생성
-        with st.expander("두 번째 박스"):
-            st.write("두 번째 박스 내용")
+        with st.expander("학습할 파일 선택"):
+            model_selected = st.checkbox("PCB")
+            if model_selected:
+                st.success("PCB  선택되었습니다.")
             
-        st.button("학습 시작")
+        with st.expander("옵션 입력"):
+            
+            col1,col2,col3=st.columns([1,1,1])
+            with col1:
+                input_ecpho = st.text_input("ecpho")
+            with col2:
+                input_cls = st.text_input("cls")
+            with col3:
+                input_size = st.text_input("size")
+            
+        if st.button("학습 시작"):
+            st.write("학습을 시작했습니다.")
+            
+            st.success("~~에서 확인 해주세요.")
         
     
 #%%
 if __name__ == "__main__":
     MyApp()
+    
