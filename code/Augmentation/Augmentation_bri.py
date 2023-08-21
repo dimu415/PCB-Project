@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import os
 import cv2
 import numpy as np
@@ -13,16 +7,20 @@ import os
 import xml.etree.ElementTree as ET
 
 class Augmentation_bri:
-    def __init__(self, minv, maxv, data_file):
+    def __init__(self, minv, maxv, data_file, xml_file_path, original_image_path, output_label_path, output_folder):
         self.minv = minv
         self.maxv = maxv
         self.data_file = data_file
+        self.xml_file_path = xml_file_path
+        self.original_image_path = original_image_path
+        self.output_label_path = output_label_path
+        self.output_folder = output_folder
         self.save_image()
         self.qa=self.xml_to_txt()
         
     # %% pcb image 불러오는 함수    
     def create_defectlist(self):
-        pcb_paths = [os.path.join('C:/work/python/PCB/PCB_DATASET/images', folder) for folder in self.data_file]
+        pcb_paths = [os.path.join(self.original_image_path, folder) for folder in self.data_file]
 
         # PCB 결함 폴더별 이미지 리스트
         defect_list = []
@@ -32,7 +30,7 @@ class Augmentation_bri:
         return defect_list
     
     # %% pcb 기판 밝기 조절
-    def brightness_var(self, image_path, output_folder):
+    def brightness_var(self,image_path):
     
         pcb_image = cv2.imread(image_path)
         
@@ -44,7 +42,7 @@ class Augmentation_bri:
     
         
         filename = os.path.basename(image_path)
-        output_file = os.path.join(output_folder, f"var_{filename}")
+        output_file = os.path.join(self.output_folder, f"var_{filename}")
         cv2.imwrite(output_file, pcb_var)
         
         return output_file
@@ -54,18 +52,18 @@ class Augmentation_bri:
         defect_list = self.create_defectlist()
         saved_image_paths = []
         # 모든 이미지들을 어둡게/밝게 만들어서 저장 (output_folder가 없으면 자동으로 생성됨)
-        output_folder = "C:/work/python/PCB/PCB_DATASET/output_folder/var"
-        os.makedirs(output_folder, exist_ok=True)
+        self.output_folder = "C:/work/python/PCB/PCB_DATASET/output_folder/var"
+        os.makedirs(self.output_folder, exist_ok=True)
        
         for image_list in defect_list:
             for image_path in image_list:
-                saved_path = self.brightness_var(image_path, output_folder)
+                saved_path = self.brightness_var(image_path)
                 saved_image_paths.append(saved_path)
         return saved_image_paths
         
     # %% xml to txt
     def xml_to_txt(self):
-        xml_paths = [os.path.join('C:/work/python/PCB/PCB_DATASET/Annotations', folder) for folder in data_file]
+        xml_paths = [os.path.join(self.xml_file_path, folder) for folder in data_file]
 
         defect_xlist = []
         for xfolder_path in xml_paths:
@@ -85,7 +83,7 @@ class Augmentation_bri:
         for xfile_list in defect_xlist:
             for xml_file in xfile_list:
                 label_output_filename = f"var_{os.path.basename(xml_file).replace('.xml', '.txt')}"
-                label_output_file_path = os.path.join(output_label_path, label_output_filename)
+                label_output_file_path = os.path.join(self.output_label_path, label_output_filename)
                 txt_path_list.append(label_output_file_path) 
                 tree = ET.parse(xml_file)  # xml_file을 파싱하여 ElementTree를 생성
                 root = tree.getroot()
@@ -112,8 +110,12 @@ class Augmentation_bri:
 
 #%% 실행
 data_file = ['Missing_hole' ,'Mouse_bite']#, 'Open_circuit', 'Short', 'Spur', 'Spurious_copper']
-a=Augmentation_bri(-100,100, data_file)
+xml_file_path = 'C:/work/python/PCB/PCB_DATASET/Annotations'
+original_image_path = 'C:/work/python/PCB/PCB_DATASET/images'
+output_label_path = "C:/work/python/PCB/PCB_DATASET/output_folder/vart"
+output_folder = "C:/work/python/PCB/PCB_DATASET/output_folder/var"
 
-result_df= a.show_dataframe()
-result_df
+Augmentation_bri(-100,100, data_file, xml_file_path, original_image_path, output_label_path, output_folder)
 
+#result_df= a.show_dataframe()
+#result_df
