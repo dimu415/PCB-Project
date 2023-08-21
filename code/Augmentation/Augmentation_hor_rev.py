@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import xml.etree.ElementTree as ET
 from PIL import Image
 import os
@@ -16,6 +10,7 @@ class Augmentation_hor_rev:
         self.flipped_label_folder = flipped_label_folder
         self.data_files = data_files
         self.transform = transform
+        self.process_data()
         
     #%% PCB 이미지와 xml 파일 리스트 수집        
     def create_list(self):
@@ -120,12 +115,4 @@ flipped_label_folder = 'C:/work/python/PCB/PCB_DATASET/images/Rescaled_images2/l
 data_files = ['Missing_hole']
 
 # 클래스 인스턴스 생성 및 process_data 함수 호출 (True로 호출하면 변환이 수행됨)
-augmentation = Augmentation_hor_rev(data_files, xml_file_path, original_image_path, flipped_image_folder, flipped_label_folder, transform=True)
-augmentation.process_data()
-
-
-# In[ ]:
-
-
-
-
+Augmentation_hor_rev(data_files, xml_file_path, original_image_path, flipped_image_folder, flipped_label_folder, transform=True)
