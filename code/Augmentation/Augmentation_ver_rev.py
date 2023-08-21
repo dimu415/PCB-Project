@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
-
 import xml.etree.ElementTree as ET
 from PIL import Image
 import os
