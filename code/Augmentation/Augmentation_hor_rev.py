@@ -86,10 +86,12 @@ class Augmentation_hor_rev:
                 flipped_image = image.transpose(Image.FLIP_LEFT_RIGHT)
                 
                 #새 이미지 저장
+                os.makedirs(flipped_image_folder, exist_ok=True)
                 flipped_image_path = os.path.join(self.flipped_image_folder, filename)
                 flipped_image.save(flipped_image_path)
 
                 # 새 라벨 생성 또는 업데이트
+                os.makedirs(flipped_label_folder, exist_ok=True)
                 flipped_label_path = os.path.join(self.flipped_label_folder, filename.replace('.jpg', '.txt'))
                 with open(flipped_label_path, 'w') as label_file:
                     for obj in bndboxes:
