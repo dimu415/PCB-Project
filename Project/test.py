@@ -30,14 +30,14 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("진문이짱")
         self.resize(1600, 800)
-        self.setStyleSheet("QMainWindow { border: 13px solid #1A2D3A; background-color:#EOEOE0;}") 
+        self.setStyleSheet("QMainWindow { border: 13px solid #1A2D3A; background-color:#E0E0E0;}") 
         self.df = pd.DataFrame()
         self.My_path=os.getcwd()
         self.image_paths=""
         self.ano_paths=""
         self.df=pd.DataFrame()
         self.colors= ["Red", "Green", "Blue", "Yellow", "Orange", "Purple", "Brown"]
-
+        os.environ['KMP_DUPLICATE_LIB_OK']='True'
         self.Main_UI()
         
     def Main_UI(self):
@@ -258,6 +258,7 @@ class MyWindow(QMainWindow):
         self.resize_slider = QLabeledRangeSlider(Qt.Horizontal)
         self.resize_slider.setMinimum(1)
         self.resize_slider.setMaximum(10)
+        self.resize_slider.rangeChanged.emit(1, 10)
         self.resize_slider.setFixedWidth(300)
         self.resize_checkbox = QCheckBox()
         self.resize_checkbox.setStyleSheet("margin-top: 27px;") 
@@ -272,8 +273,10 @@ class MyWindow(QMainWindow):
         brightness_lb.setAlignment(Qt.AlignCenter)
         brightness_lb.setStyleSheet("background-color: #673AB7; color: white; border: none; padding: 5px; border-radius: 10px;")
         self.brightness_slider = QLabeledRangeSlider(Qt.Horizontal)
-        self.brightness_slider.setMinimum(0)
-        self.brightness_slider.setMaximum(70)       
+        
+        self.brightness_slider.setMinimum(70) 
+        self.brightness_slider.setMaximum(30)    
+        self.brightness_slider.rangeChanged.emit(30, 70)
         #self.brightness_slider = QSlider(1)
         #self.brightness_slider.setOrientation(1)  # 수직 방향 슬라이더
         #self.brightness_slider.setTickPosition(QSlider.TicksBothSides)
@@ -292,6 +295,7 @@ class MyWindow(QMainWindow):
         self.rotation_slider = QLabeledRangeSlider(Qt.Horizontal)
         self.rotation_slider.setMinimum(0)
         self.rotation_slider.setMaximum(30) 
+        self.rotation_slider.rangeChanged.emit(0,30)
         self.rotation_slider.setFixedWidth(300) 
         self.rotation_checkbox = QCheckBox()
         self.rotation_checkbox.setStyleSheet("margin-top: 27px;") 
@@ -1154,7 +1158,8 @@ class MyWindow(QMainWindow):
         'train':f"{self.My_path}/{self.file_name}/data/train/images/",
         'val':f"{self.My_path}/{self.file_name}/data/test/images/",
         'names':names,
-        'nc':len(names)
+        'nc':len(names),
+        'cls':0.2
         }
         yaml_data = yaml.dump(data)
         print(yaml_data)
@@ -1171,9 +1176,8 @@ class MyWindow(QMainWindow):
             pcb_yaml=yaml.safe_load(f)
     def Model_train(self):
         model=YOLO('yolov8n.pt') # 모델 불러오기
-        model.train
         model.train(data=f"{self.My_path}/{self.file_name}/data/data.yaml",#yaml 경로
-                epochs=10000, 
+                epochs=100, 
                 patience=10,
                 batch=32,
                 imgsz=416,
