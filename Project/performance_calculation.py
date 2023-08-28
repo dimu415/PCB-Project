@@ -32,7 +32,6 @@ class get_info:
                 xmax=(a[0]+a[2]/2)*w
                 ymin=(a[1]-a[3]/2)*h
                 ymax=(a[1]+a[3]/2)*h
-                print(a[0],w,h,xmin)
                 truth_boxes[name].append((xmin,ymin,xmax,ymax))
                 cl[name].append(r)
         return dict(sorted(truth_boxes.items())),dict(sorted(cl.items()))
@@ -147,7 +146,6 @@ class return_score:
         # box: (x_min, y_min, x_max, y_max)
         x1, y1, x2, y2 = box1
         x3, y3, x4, y4 = box2
-        print(x1, x3 )
         x_intersection = max(0, min(x2, x4) - max(x1, x3))
         y_intersection = max(0, min(y2, y4) - max(y1, y3))
     
@@ -163,7 +161,7 @@ class return_score:
     
        
 #%% 실행 부분
-'''
+
 labels_path="C:/Users/USER/Desktop/test_train/test/labels" #test label 경로
 images_path="C:/Users/USER/Desktop/test_train/test/images" #test image 경로
 model=YOLO('C:/work/python/project/runs/detect/train3/weights/best.pt') #모델 가져오기
@@ -174,4 +172,3 @@ preds =info.preds
 truths_cl=info.truths_cl
 preds_cl =info.preds_cl
 score = return_score(truths,preds,truths_cl,preds_cl,0.5) # (실제,예측,iou설정값)
-'''
