@@ -92,49 +92,36 @@ class return_score:
         false_positives = {}
         false_negatives = {}
         len_truth={}
-    
+        for ground_truth_cl in self.truths_cls:
+            for n in self.truths_cls[ground_truth_cl]:
+                try:
+                    len_truth[n]+=1
+                except:
+                    true_positives[n]=0
+                    false_positives[n]=0
+                    len_truth[n]=1
         for truth,pred in zip(self.truths,self.preds):
             ground_truth=self.truths[truth]
             predictions=self.preds[pred]
             
             ground_truth_cl=self.truths_cls[truth]
             predictions_cl=self.pred_cl[pred]
-            name=None
-            if "missing" in truth:
-                name=0
-            elif "mouse" in truth:
-                name=1
-            elif "open" in truth:
-                name=2
-            elif "short" in truth:
-                name=3
-            elif "spurious" in truth:
-                name=5
-            elif "spur" in truth:
-                name=4
-                
-            try:
-                len_truth[name]+=len(self.truths_cls[truth])
-            except:
-                true_positives[name]=0
-                false_positives[name]=0
-                len_truth[name]=len(self.truths_cls[truth])
+           
+            
             
             for pred_box,pred_cl in zip(predictions,predictions_cl):
                 pred_box_detected = False
         
                 for gt_box,gt_cl in zip(ground_truth,ground_truth_cl):
                     iou = self.calculate_iou(pred_box, gt_box)
-                    # print("pred=",pred_box,"\n gt=", gt_box)
                     gt=int(gt_cl)
                     if iou >= self.iou_threshold and pred_cl==gt:
                         pred_box_detected = True
                         break
-                
                 if pred_box_detected:
-                    true_positives[name] += 1
+                    true_positives[str(int(pred_cl))] += 1
                 else:
-                    false_positives[name] += 1
+                    false_positives[str(int(pred_cl))] += 1
         a={}
         for i in len_truth:
             t=len_truth[i]
