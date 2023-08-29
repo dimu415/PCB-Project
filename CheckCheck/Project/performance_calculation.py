@@ -71,11 +71,11 @@ class get_info:
         imgs=[self.image_path+"/"+img+".jpg" for img in files]
         boxes={}
         clss={}
-        results=self.model(imgs)
-        for result in results:
-            name=result.path.split("/")[-1][:-4]
-            boxes[name]=result.boxes.xyxy
-            clss[name]=result.boxes.cls
+        for img in imgs:
+            for result in self.model([img]):
+                name=result.path.split("/")[-1][:-4]
+                boxes[name]=result.boxes.xyxy
+                clss[name]=result.boxes.cls
         return dict(sorted(boxes.items())),dict(sorted(clss.items()))
     
 #%% 정밀도,재현도,f1-socre 계산
@@ -91,7 +91,6 @@ class return_score:
         true_positives = {}
         false_positives = {}
         false_negatives = {}
-        n={'missing': 0,'mouse': 1,'open': 2,'short': 3,'spur': 4,'spurious': 5}
         len_truth={}
     
         for truth,pred in zip(self.truths,self.preds):
@@ -100,10 +99,20 @@ class return_score:
             
             ground_truth_cl=self.truths_cls[truth]
             predictions_cl=self.pred_cl[pred]
-            
-            
-            name=truth.split("_")[1]
-            name=n[name]
+            name=None
+            if "missing" in truth:
+                name=0
+            elif "mouse" in truth:
+                name=1
+            elif "open" in truth:
+                name=2
+            elif "short" in truth:
+                name=3
+            elif "spurious" in truth:
+                name=5
+            elif "spur" in truth:
+                name=4
+                
             try:
                 len_truth[name]+=len(self.truths_cls[truth])
             except:
@@ -116,18 +125,17 @@ class return_score:
         
                 for gt_box,gt_cl in zip(ground_truth,ground_truth_cl):
                     iou = self.calculate_iou(pred_box, gt_box)
-                   # print("pred=",pred_box,"\n gt=", gt_box)
+                    # print("pred=",pred_box,"\n gt=", gt_box)
                     gt=int(gt_cl)
                     if iou >= self.iou_threshold and pred_cl==gt:
                         pred_box_detected = True
                         break
-                name=truth.split("_")[1]
-                name=n[name]
+                
                 if pred_box_detected:
                     true_positives[name] += 1
                 else:
                     false_positives[name] += 1
-    
+        a={}
         for i in len_truth:
             t=len_truth[i]
             tp=true_positives[i]
@@ -135,13 +143,13 @@ class return_score:
             fn = t - tp
             recall = tp / (tp + fn)
             precision = tp/ (tp + fp)
-            print(t,tp,fp,fn)
+            # print(t,tp,fp,fn)
             F1_score = (2*precision*recall)/(precision+recall)
-            print("============",i,"============")
-            print(f"Recall: {recall:.2f}")
-            print(f"Precision: {precision:.2f}")
-            print(f"F1_score: {F1_score:.2f}")
-            
+            # print("============",i,"============")
+            # print(f"Recall: {recall:.2f}")
+            # print(f"Precision: {precision:.2f}")
+            # print(f"F1_score: {F1_score:.2f}")
+            a[str(i)]=[recall,precision,F1_score]
         truth=sum(len_truth.values())
         true_positive=sum(true_positives.values())
         false_positive=sum(false_positives.values())
@@ -149,10 +157,14 @@ class return_score:
         total_recall= true_positive/(true_positive+false_negative)
         total_precision=true_positive/(true_positive+false_positive)
         total_F1score=(2*total_precision*total_recall)/(total_precision+total_recall)
-        print("===total====")
-        print(f"Recall: {total_recall:.2f}")
-        print(f"Precision: {total_precision:.2f}")
-        print(f"F1_score: {total_F1score:.2f}")
+        # print("===total====")
+        # print(f"Recall: {total_recall:.2f}")
+        # print(f"Precision: {total_precision:.2f}")
+        # print(f"F1_score: {total_F1score:.2f}")
+        a['total']=[total_recall,total_precision,total_F1score]
+        
+        return a 
+            
     def calculate_iou(self,box1, box2):
         # box: (x_min, y_min, x_max, y_max)
         x1, y1, x2, y2 = box1
