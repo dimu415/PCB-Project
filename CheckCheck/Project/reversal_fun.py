@@ -52,8 +52,8 @@ class Augmentation_ver_rev:
                 for obj in bndboxes:
                     flipped_xmin = obj['xmin']/w
                     flipped_xmax = obj['xmax']/w
-                    flipped_ymin = size[1] - obj['ymax']/h  # Vertical flip
-                    flipped_ymax = size[1] - obj['ymin']/h  # Vertical flip
+                    flipped_ymin = (size[1] - obj['ymax'])/h  # Vertical flip
+                    flipped_ymax = (size[1] - obj['ymin'])/h  # Vertical flip
                     
                     x_center=(flipped_xmax+flipped_xmin)/2
                     y_center=(flipped_ymax+flipped_ymin)/2
