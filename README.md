@@ -7,7 +7,8 @@
 spyder 에서 Pyqt를 이용하여 프로그램을 구현했습니다.
 
  <h2>테스트한 이미지</h2>
-![image](https://github.com/GoodJinMo/PCB-Project/assets/97722297/bb6b44c4-ddad-42fa-b200-48557ba732d3)
+<img src="https://github.com/GoodJinMo/PCB-Project/assets/97722297/bb6b44c4-ddad-42fa-b200-48557ba732d3" width=500 hight=500>
+<a href="https://www.kaggle.com/datasets/akhatova/pcb-defects">pcb-Dataset</a>
 
 
 
