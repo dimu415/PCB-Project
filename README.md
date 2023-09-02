@@ -17,10 +17,54 @@ spyder 에서 Pyqt를 이용하여 프로그램을 구현했습니다.
 
 <img src="https://github.com/GoodJinMo/PCB-Project/assets/97722297/f5ba4382-19ed-469a-aaf0-2e4350fec7f8" width=500 hight=500>
 
+<h2>yolov8</h2>
+다른 모델에 비해 정확하고 추론성능이 좋았다.
 
+<img src="https://github.com/GoodJinMo/PCB-Project/assets/97722297/e875f856-1cc5-472f-9f73-46158adc2229" width=500 hight=500>
 
+<h2>성능</h2>
+<b>base</b>
+  <table>
+    <tr>
+      <th scope="col">Recall</td>
+      <th scope="col">Precision</td>
+      <th scope="col">F1-score</td>
+    </tr>
+    <tr>
+      <td>0.49</td>
+      <td>0.84</td>
+      <td>0.61</td>
+    </tr>
+  </table>
 
+  <b>image Agumentation</b>
+   <table>
+    <tr>
+      <th scope="col">Recall</td>
+      <th scope="col">Precision</td>
+      <th scope="col">F1-score</td>
+    </tr>
+    <tr>
+      <td>0.73</td>
+      <td>0.89</td>
+      <td>0.81</td>
+    </tr>
+  </table>
 
+  <b>last score</b>
+
+  <table>
+    <tr>
+      <th scope="col">Recall</td>
+      <th scope="col">Precision</td>
+      <th scope="col">F1-score</td>
+    </tr>
+    <tr>
+      <td>0.9</td>
+      <td>0.94</td>
+      <td>0.92</td>
+    </tr>
+  </table>
 
 1.upload 
   -  이미지 파일을 불러와 제대로 불러왔는지 확인합니다.
