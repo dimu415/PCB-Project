@@ -15,6 +15,8 @@ spyder 에서 Pyqt를 이용하여 프로그램을 구현했습니다.
 
 <h2>테스트한 라벨링(xml)</h2>
 
+<img src="https://github.com/GoodJinMo/PCB-Project/assets/97722297/f5ba4382-19ed-469a-aaf0-2e4350fec7f8" width=500 hight=500>
+
 
 
 
